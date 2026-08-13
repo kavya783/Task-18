@@ -1,0 +1,84 @@
+<%= form_with(model: @doctor) do |form| %>
+   <div class="d-none d-md-block">
+  <div class="d-flex justify-content-center">
+    <div class="card rounded-3 p-4 w-50">
+     <% if @doctor.errors.any? %>
+  <div class="alert alert-danger">
+    <ul class="mb-0">
+      <% @doctor.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+      <div class="mb-3">
+        <%= form.label :Doctor Name %>
+        <%= form.text_field : doctor name, class: "form-control" %>
+      </div>
+
+      <div class="mb-3">
+        <%= form.label :Qualification %>
+        <%= form.text_field :qualification, class: "form-control" %>
+      </div>
+
+      <div class="mb-3">
+        <%= form.label :Specialization %>
+        <%= form.text_field :specialization, class: "form-control" %>
+      </div>
+
+      <div class="mb-3">
+        <%= form.label :city %>
+        <%= form.text_field :city, class: "form-control" %>
+      </div>
+
+      <div class="text-center">
+        <%= form.submit @doctor.new_record? ? "Create" : "Update",
+            class: "btn btn-warning mt-2 w-50" %>
+      </div>
+
+    </div>
+  </div>
+  </div>
+  <div class="d-block d-md-none">
+   <div class="d-flex justify-content-center">
+    <div class="card rounded-3 p-4 w-75">
+     <% if @doctor.errors.any? %>
+  <div class="alert alert-danger">
+    <ul class="mb-0">
+      <% @doctor.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+      <div class="mb-3">
+        <%= form.label : Doctor Name %>
+        <%= form.text_field : doctor name, class: "form-control" %>
+      </div>
+
+      <div class="mb-3">
+        <%= form.label :Qualification %>
+        <%= form.text_field :qualification, class: "form-control" %>
+      </div>
+
+      <div class="mb-3">
+        <%= form.label :Specialization %>
+        <%= form.text_field :specialization, class: "form-control" %>
+      </div>
+
+      <div class="mb-3">
+        <%= form.label :city %>
+        <%= form.text_field :city, class: "form-control" %>
+      </div>
+
+      <div class="text-center">
+        <%= form.submit @doctor.new_record? ? "Create" : "Update",
+            class: "btn btn-warning mt-2 w-50" %>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<% end %>

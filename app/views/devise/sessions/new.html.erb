@@ -1,0 +1,53 @@
+<div class="container vh-100 d-flex justify-content-center align-items-center">
+  <div class="card shadow p-4" style="width: 400px;">
+
+    <h2 class="text-center mb-4 text-primary">Login</h2>
+    <p class="text-center mb-4 text-secondary">
+      Sign in with your hospital, doctor, or patient account.
+    </p>
+
+    <% if flash[:alert].present? %>
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <%= flash[:alert] %>
+
+        <button type="button"
+                class="btn-close"
+                data-bs-dismiss="alert"
+                aria-label="Close"></button>
+      </div>
+    <% end %>
+ 
+    <%= form_with url: session_path, local: true do |f| %>
+      <% if @error_message.present? %>
+  <div class="alert alert-danger">
+    <%= @error_message %>
+  </div>
+<% end %>
+      <div class="mb-3">
+        <%= f.label :email, class: "form-label" %>
+        <%= f.email_field :email,
+            autofocus: true,
+            class: "form-control",
+            placeholder: "Enter Email" %>
+      </div>
+
+      <div class="mb-3">
+        <%= f.label :password, class: "form-label" %>
+        <%= f.password_field :password,
+            class: "form-control",
+            placeholder: "Enter Password" %>
+      </div>
+
+      <%= f.submit "Login",
+          class: "btn btn-primary w-100" %>
+
+    <% end %>
+
+    <p class="mt-2 mb-0 text-center">Or</p>
+
+    <div class="mt-1 text-center">
+      <%= link_to "Sign Up", new_user_registration_path %>
+    </div>
+
+  </div>
+</div>

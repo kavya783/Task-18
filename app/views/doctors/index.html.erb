@@ -1,0 +1,107 @@
+<h1 class="fs-2 text-center text-danger mb-4 mt-5">Doctors Details</h1>
+ <div class="d-none d-md-block">
+<div class="container mt-3 ">
+  
+  <%= link_to "New Doctor",
+      new_hospital_doctor_path(@hospital),
+      class: "btn btn-secondary" %>
+</div>
+  </div>
+  <% if notice %>
+  <div class="alert alert-success text-center">
+    <%= notice %>
+  </div>
+  <% end %>
+<div class="d-flex justify-content-center">
+  <table class="table table-bordered table-sm w-75">
+
+    <thead>
+      <tr class="text-center">
+       
+        <th>Doctor Name</th>
+        <th>Qualification</th>
+        <th>Specialization</th>
+        <th>City</th>
+         <th>Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+     <% @doctors.each_with_index do |doctor, index| %>
+        <tr class="text-center">
+        
+          <td><%= doctor.name %></td>
+          <td><%= doctor.qualification %></td>
+          <td><%= doctor.specialization %></td>
+          <td><%= doctor.city %></td>
+          <td>
+              <div class="d-flex justify-content-center gap-2">
+               <%= link_to "View",
+    hospital_doctor_path(@hospital, doctor),
+    class: "btn btn-success" %>
+               <%= link_to "Edit",
+    edit_hospital_doctor_path(@hospital, doctor),
+    class: "btn btn-primary" %>
+               <%= link_to "Delete",
+    hospital_doctor_path(@hospital, doctor),
+    data: {
+      turbo_method: :delete,
+      turbo_confirm: "Are you sure?"
+    },
+    class: "btn btn-danger" %>
+              </div>
+            </td>
+        </tr>
+      <% end %>
+    </tbody>
+
+  </table>
+</div>
+</div>
+ <div class="d-md-none">
+     <div class="d-flex justify-content-end mb-3 me-5">
+  <%= link_to "New Doctor",
+      new_hospital_doctor_path(@hospital),
+      class: "btn btn-secondary" %>
+</div>
+
+<% @doctors.each do |doctor| %>
+  <div class="card shadow-lg mb-3 p-3 w-75 ms-5 me-0">
+
+    <div class="fw-bold">
+      <strong>Doctor Name:</strong> <%= doctor.name %>
+    </div>
+
+    <div class="text-muted mb-2">
+      <strong>Qualification:</strong> <%= doctor.qualification %>
+    </div>
+
+    <div class="fw-bold">
+      <strong>Specialization:</strong> <%= doctor.specialization %>
+    </div>
+
+    <div class="fw-bold">
+      <strong>City:</strong> <%= doctor.city %>
+    </div>
+
+    <div class="d-flex gap-2">
+      <%= link_to "View",
+          hospital_doctor_path(@hospital, doctor),
+          class: "btn btn-sm btn-success w-100" %>
+
+      <%= link_to "Edit",
+          edit_hospital_doctor_path(@hospital, doctor),
+          class: "btn btn-sm btn-primary w-100" %>
+
+      <%= link_to "Delete",
+          hospital_doctor_path(@hospital, doctor),
+          data: {
+            turbo_method: :delete,
+            turbo_confirm: "Are you sure?"
+          },
+          class: "btn btn-sm btn-danger w-100" %>
+    </div>
+
+  </div>
+<% end %>
+  </div>

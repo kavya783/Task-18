@@ -1,0 +1,6 @@
+class AddEmailToPatients < ActiveRecord::Migration[8.1]
+  def change
+    add_column :patients, :email, :string
+    add_index :patients, :email, unique: true
+  end
+end

@@ -1,0 +1,1250 @@
+
+     <% if notice %>
+  <div class="alert alert-success text-center">
+    <%= notice %>
+  </div>
+  <% end %>
+
+
+
+<% if @mode.blank? || @mode == "hospital_details" %>
+
+<!-- Desktop View -->
+<div class="d-none d-md-block">
+  <div class="container mt-4 d-flex justify-content-center">
+   <div class="card shadow-lg border-0 rounded-4 responsive-width">
+
+      <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center rounded-top-4">
+        <h5 class="mb-0">Hospital Details</h5>
+      </div>
+
+      <div class="card-body p-4">
+        <div class="row g-4 align-items-center">
+
+          <div class="col-md-6">
+            <p><strong>Name:</strong> <%= @hospital.name %></p>
+            <p><strong>Email:</strong> <%= @hospital.email %></p>
+            <p><strong>Phone:</strong> <%= @hospital.phone %></p>
+            <p><strong>City:</strong> <%= @hospital.city %></p>
+          </div>
+         <div class="col-md-6 text-center">
+
+  <% if @hospital.image.attached? %>
+
+    <div class="card shadow-lg position-relative d-inline-block">
+
+      <%= image_tag url_for(@hospital.image),
+          class: "img-fluid rounded shadow",
+          style: "max-height: 200px;" %>
+
+    
+      <div class="position-absolute top-0 end-0 m-2 ms-5 ps-5 me-1">
+        <%= button_to remove_image_hospital_path(@hospital),
+            method: :delete,
+            data: { turbo_confirm: "Are you sure?" },
+            class: "btn btn-danger btn-sm rounded-circle" do %>
+       <i class="bi bi-trash"></i>
+        <% end %>
+      </div>
+
+    </div>
+
+
+
+</div>
+<% else %>
+
+ <%= form_with model: @hospital,
+    url: upload_image_hospital_path(@hospital),
+    method: :patch,
+    local: true,
+    html: { multipart: true } do |f| %>
+
+  <%= f.file_field :image, required: true, class: "form-control mb-5" %>
+
+  <%= f.submit "Upload", class: "btn btn-success btn-sm" %>
+
+<% end %>
+<% end %>
+
+</div>
+        </div>  
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Mobile View -->
+<div class="d-block d-md-none">
+  <div class="container mt-4">
+  
+    <div class="card shadow-lg border-1 rounded-4 w-100">
+  
+      <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Hospital Details</h5>
+      </div>
+      <div class="text-center mt-3">
+
+  <% if @hospital.image.attached? %>
+    <div class="card  shadow-lg ">
+    <%= image_tag url_for(@hospital.image),
+        class: "img-fluid rounded shadow",
+        style: "max-height: 200px;" %>
+
+    <div class="d-flex justify-content-end me-2 mt-2 mb-2">
+      <%= button_to remove_image_hospital_path(@hospital),
+          method: :delete,
+          data: { turbo_confirm: "Are you sure?" },
+          class: "btn btn-danger btn-sm" do %>
+        <i class="bi bi-trash"></i>
+      <% end %>
+    </div>
+   </div> 
+  <% else %>
+
+    <%= form_with model: @hospital,
+        url: upload_image_hospital_path(@hospital),
+        method: :patch,
+        local: true,
+        html: { multipart: true } do |f| %>
+
+      <%= f.file_field :image, class: "form-control mb-2" %>
+      <%= f.submit "Upload", class: "btn btn-success btn-sm" %>
+
+    <% end %>
+
+  <% end %>
+
+</div>
+
+      <div class="card-body">
+
+       
+
+        <p><strong>Name:</strong> <%= @hospital.name %></p>
+        <p><strong>Email:</strong> <%= @hospital.email %></p>
+        <p><strong>Phone:</strong> <%= @hospital.phone %></p>
+        <p><strong>City:</strong> <%= @hospital.city %></p>
+
+      </div>
+      
+
+    </div>
+  </div>
+</div>
+
+<% end %>
+ 
+
+<% if @mode == "doctor_form" %>
+
+<div class="container mt-4 d-flex justify-content-center">
+
+  <div class="card shadow-lg border-0 rounded-4 w-100 w-md-75 ">
+
+    <!-- Header -->
+    <div class="card-header bg-warning text-dark rounded-top-4">
+      <h5 class="mb-0">
+        <i class="bi bi-person-plus me-2"></i>
+        Add Doctor
+      </h5>
+    </div>
+
+    <div class="card-body p-4">
+
+      <!-- Errors -->
+      <% if @doctor.errors.any? %>
+        <div class="alert alert-danger">
+          <ul class="mb-0">
+            <% @doctor.errors.full_messages.each do |msg| %>
+              <li><%= msg %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <%= form_with model: @doctor,
+                    url: hospital_doctors_path(@hospital),
+                    local: true do |f| %>
+
+        <div class="row g-3">
+
+          <!-- Name -->
+          <div class="col-md-6">
+            <label class="form-label">Doctor Name</label>
+            <%= f.text_field :name, class: "form-control", placeholder: "Enter name" %>
+          </div>
+
+          <!-- Qualification -->
+          <div class="col-md-6">
+            <label class="form-label">Qualification</label>
+            <%= f.text_field :qualification, class: "form-control", placeholder: "MBBS, MD..." %>
+          </div>
+
+          <!-- Specialization -->
+          <div class="col-md-6">
+            <label class="form-label">Specialization</label>
+            <%= f.text_field :specialization, class: "form-control", placeholder: "Cardiologist..." %>
+          </div>
+
+          <!-- City -->
+          <div class="col-md-6">
+            <label class="form-label">City</label>
+            <%= f.text_field :city, class: "form-control", placeholder: "Enter city" %>
+          </div>
+
+          <!-- Phone -->
+          <div class="col-md-6">
+            <label class="form-label">Phone</label>
+            <%= f.text_field :phone, class: "form-control", placeholder: "Phone number" %>
+          </div>
+
+          <!-- Email -->
+          <div class="col-md-6">
+            <label class="form-label">Email</label>
+            <%= f.email_field :email, class: "form-control", placeholder: "email@example.com" %>
+          </div>
+
+          <!-- Password -->
+          <div class="col-md-12">
+            <label class="form-label">Password</label>
+            <%= f.password_field :password, class: "form-control", placeholder: "Create password" %>
+          </div>
+
+        </div>
+
+        <!-- Submit -->
+        <div class="text-center mt-4">
+          <%= f.submit @doctor.new_record? ? "Create Doctor" : "Update Doctor",
+              class: "btn btn-warning px-5" %>
+        </div>
+
+      <% end %>
+
+    </div>
+  </div>
+
+</div>
+
+<% end %>
+<% if @edit_doctor %>
+
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-7 col-md-9 col-sm-12">
+
+      <div class="card border-0 shadow-lg rounded-4">
+
+        <!-- Header -->
+        <div class="card-header bg-primary text-white rounded-top-4 d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">Edit Doctor</h5>
+        </div>
+
+        <div class="card-body p-4">
+
+          <!-- Errors -->
+          <% if @doctor.errors.any? %>
+            <div class="alert alert-danger rounded-3">
+              <ul class="mb-0">
+                <% @doctor.errors.full_messages.each do |msg| %>
+                  <li><%= msg %></li>
+                <% end %>
+              </ul>
+            </div>
+          <% end %>
+
+          <%= form_with model: @doctor,
+              url: hospital_doctor_path(@hospital, @doctor),
+              method: :patch do |f| %>
+
+            <div class="row g-3">
+
+              <div class="col-md-6">
+                <%= f.label :name, "Doctor Name", class: "form-label" %>
+                <%= f.text_field :name, class: "form-control rounded-3" %>
+              </div>
+
+              <div class="col-md-6">
+                <%= f.label :qualification, class: "form-label" %>
+                <%= f.text_field :qualification, class: "form-control rounded-3" %>
+              </div>
+
+              <div class="col-md-6">
+                <%= f.label :specialization, class: "form-label" %>
+                <%= f.text_field :specialization, class: "form-control rounded-3" %>
+              </div>
+
+              <div class="col-md-6">
+                <%= f.label :phone, class: "form-label" %>
+                <%= f.text_field :phone, class: "form-control rounded-3" %>
+              </div>
+
+              <div class="col-md-6">
+                <%= f.label :email, class: "form-label" %>
+                <%= f.text_field :email, class: "form-control rounded-3" %>
+              </div>
+
+            </div>
+
+            <!-- Buttons -->
+            <div class="d-flex justify-content-end gap-2 mt-4">
+              <%= link_to "Cancel",
+                  hospital_path(@hospital),
+                  class: "btn btn-light border" %>
+
+              <%= f.submit "Update Profile",
+                  class: "btn btn-success px-4" %>
+            </div>
+
+          <% end %>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<% end %>
+
+
+<% if @mode == "doctor_table" && !@edit_doctor %>
+
+<div class="container py-4">
+
+  <div class="card border-0 shadow-lg rounded-4">
+
+    <!-- Header -->
+    <div class="card-header bg-dark text-white rounded-top-4 d-flex justify-content-between align-items-center">
+      <h5 class="mb-0">Doctor Details</h5>
+
+      <% if can? :create, Doctor %>
+  <%= link_to "＋ Add Doctor",
+      hospital_path(@hospital, mode: "doctor_form"),
+      class: "btn btn-success btn-sm rounded-3" %>
+<% end %>
+    </div>
+
+    <div class="card-body">
+
+      <% if @hospital.doctors.any? %>
+
+        <!-- ================= DESKTOP ================= -->
+        <div class="d-none d-lg-block">
+
+         <div class="table-responsive">
+  <table class="table align-middle table-hover" style="min-width: 1000px;">
+
+              <thead class="table-light">
+                <tr>
+                  <th>Name</th>
+                  <th>Qualification</th>
+                  <th>Specialization</th>
+                  <th>Contact</th>
+                  <th>Location</th>
+                  <th class="text-center">Actions</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <% @hospital.doctors.each do |doctor| %>
+                  <tr>
+
+                    <td class="fw-semibold"><%= doctor.name %></td>
+
+                    <td><%= doctor.qualification %></td>
+
+                    <td>
+                      <span class="badge bg-primary">
+                        <%= doctor.specialization %>
+                      </span>
+                    </td>
+
+                    <td>
+                      <div class="small">
+                        <i class="bi bi-telephone-fill"></i> <%= doctor.phone %><br>
+                         <i class="bi bi-envelope-fill"></i> <%= doctor.email %>
+                      </div>
+                    </td>
+
+                    <td><%= doctor.city %></td>
+
+                    <td>
+  <div class="d-flex justify-content-center gap-1 flex-wrap">
+
+    <%= link_to "View",
+        hospital_path(@hospital, mode: "doctor_show", doctor_id: doctor.id),
+        class: "btn btn-info btn-sm" %>
+
+    <% if can? :update, doctor %>
+      <%= link_to "Edit",
+          hospital_path(@hospital, mode: "doctor_table", edit_doctor: doctor.id),
+          class: "btn btn-warning btn-sm" %>
+    <% end %>
+
+    <% if can? :destroy, doctor %>
+      <%= button_to "Delete",
+          hospital_doctor_path(@hospital, doctor),
+          method: :delete,
+          data: { turbo_confirm: "Are you sure?" },
+          class: "btn btn-danger btn-sm" %>
+    <% end %>
+
+  </div>
+</td>
+
+                  </tr>
+                <% end %>
+              </tbody>
+
+            </table>
+          </div>
+
+        </div>
+
+        <!-- ================= MOBILE ================= -->
+        <div class="d-block d-lg-none">
+
+          <% @hospital.doctors.each do |doctor| %>
+
+            <div class="card border-0 shadow-sm rounded-4 mb-3">
+
+              <div class="card-body">
+
+                <h5 class="mb-2 fw-bold"> <strong>Name:</strong><%= doctor.name %></h5>
+
+                <p class="mb-1"><strong>Qualification:</strong> <%= doctor.qualification %></p>
+
+                <p class="mb-1">
+                  <strong>Specialization:</strong>
+                  <span class="badge bg-primary"><%= doctor.specialization %></span>
+                </p>
+                  <span>
+                  <strong>Phone:</strong>  <p class="mb-1"> <%= doctor.phone %></p>
+                  </span>
+                 <strong>Email:</strong> <p class="mb-2"> <%= doctor.email %></p>
+
+                <div class="d-flex gap-2">
+
+                  <%= link_to "View",
+                      hospital_path(@hospital, mode: "doctor_show", doctor_id: doctor.id),
+                      class: "btn btn-info btn-sm w-100" %>
+
+                  <%= link_to "Edit",
+                      hospital_path(@hospital, mode: "doctor_table", edit_doctor: doctor.id),
+                      class: "btn btn-warning btn-sm w-100" %>
+
+                  <%= button_to "Delete",
+                      hospital_doctor_path(@hospital, doctor),
+                      method: :delete,
+                      data: { turbo_confirm: "Are you sure?" },
+                      class: "btn btn-danger btn-sm w-100" %>
+
+                </div>
+
+              </div>
+            </div>
+
+          <% end %>
+
+        </div>
+
+      <% else %>
+
+        <div class="text-center py-4 text-muted">
+          No doctors found.
+        </div>
+
+      <% end %>
+
+    </div>
+
+  </div>
+
+</div>
+
+<% end %>
+<% if params[:mode] == "doctor_show" %>
+
+  <% doctor = @hospital.doctors.find_by(id: params[:doctor_id]) %>
+
+  <% if doctor %>
+
+    <div class="container d-flex justify-content-center mt-1 mb-3">
+      <div class="card shadow p-4 w-75">
+
+        <h3>Doctor Details</h3>
+
+        <p><strong>Name:</strong> <%= doctor.name %></p>
+        <p><strong>Qualification:</strong> <%= doctor.qualification %></p>
+        <p><strong>Specialization:</strong> <%= doctor.specialization %></p>
+        <p><strong>City:</strong> <%= doctor.city %></p>
+        <p><strong>Phone:</strong> <%= doctor.phone %></p>
+         <p><strong>Email:</strong> <%= doctor.email %></p>
+
+        <div class="d-flex gap-2 mt-3">
+
+          <%= link_to "Back",
+              hospital_path(@hospital, mode: "doctor_table"),
+              class: "btn btn-secondary" %>
+
+          <%= link_to "Edit",
+              hospital_path(@hospital, mode: "doctor_table", edit_doctor: doctor.id),
+              class: "btn btn-primary" %>
+
+        </div>
+
+      </div>
+    </div>
+
+  <% end %>
+
+<% end %>
+
+<% if params[:mode] == "patient_table" %>
+
+<div class="d-none d-md-block">
+  <div class="container d-flex justify-content-center mt-5 mb-3">
+    <div class="card border-0 shadow-lg rounded-4 w-100 ">
+  <div class="card-header bg-primary text-white rounded-top-4 d-flex justify-content-between align-items-center">
+    <h5 class="mb-0">Patient Details</h5>
+
+    <%= link_to hospital_path(@hospital, mode: "patient_form"),
+        class: "btn btn-light btn-sm fw-bold" do %>
+      <i class="bi bi-plus-circle"></i> Add Patient
+    <% end %>
+  </div>
+
+
+      <% if @hospital.patients.any? %>
+
+        <div class="table-responsive">
+  <table class="table align-middle table-hover" style="min-width: 800px;">
+
+    <thead class="table-light sticky-top">
+      <tr>
+        <th class="text-center">Name</th>
+        <th class="text-center">Age</th>
+        <th class="text-center">Disease</th>
+        <th class="text-center">Contact</th>
+        <th class="text-center">Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @hospital.patients.each do |patient| %>
+        <tr>
+
+          <td class="fw-semibold text-center">
+            <%= patient.name %>
+          </td>
+
+          <td class="text-center">
+            <span class="badge bg-secondary ">
+              <%= patient.age %> yrs
+            </span>
+          </td>
+
+          <td class="text-center">
+            <span class="badge bg-warning text-dark">
+              <%= patient.disease %>
+            </span>
+          </td>
+
+          <td class="text-center">
+            <small>
+              <i class="bi bi-telephone-fill"></i>
+              <%= patient.phone %>
+              <br>
+
+              <i class="bi bi-envelope-fill"></i>
+              <%= patient.email %>
+            </small>
+          </td>
+
+         <td>
+  <div class="d-flex justify-content-center gap-1 flex-wrap">
+
+    <%= link_to "View",
+        hospital_path(@hospital,
+        mode: "patient_show",
+        patient_id: patient.id),
+        class: "btn btn-info btn-sm" %>
+
+    <%= link_to "Edit",
+        hospital_path(@hospital,
+        mode: "patient_edit",
+        patient_id: patient.id),
+        class: "btn btn-warning btn-sm" %>
+
+    <%= button_to "Delete",
+        hospital_patient_path(@hospital, patient),
+        method: :delete,
+        data: { turbo_confirm: "Are you sure?" },
+        class: "btn btn-danger btn-sm" %>
+
+  </div>
+</td>
+
+        </tr>
+      <% end %>
+    </tbody>
+
+  </table>
+</div>
+
+      <% else %>
+
+        <p class="text-center mt-3">No patients found.</p>
+
+      <% end %>
+
+    </div>
+  </div>
+</div>
+
+
+
+<div class="d-block d-md-none">
+  <div class="container">
+
+   <div class="d-flex justify-content-around mb-3 mt-5 gap-2">
+  <h3>Patient Details</h3>
+
+  <%= link_to "Add Patient",
+        hospital_path(@hospital, mode: "patient_form"),
+        class: "btn btn-success" %>
+</div>
+  
+    <% @hospital.patients.each do |patient| %>
+
+      <div class="card shadow p-3 mb-3">
+
+        <p><strong>Name:</strong> <%= patient.name %></p>
+
+        <p><strong>Age:</strong>
+          <%= patient.age %>
+        </p>
+
+        <p><strong>Disease:</strong>
+          <%=patient.disease %>
+        </p>
+
+        <p><strong>Phone:</strong>
+          <%= patient.phone %>
+        </p>
+         <p><strong>Email:</strong>
+          <%= patient.email %>
+        </p>
+        
+<div class="d-flex gap-2">
+
+  <%= link_to "View",
+    hospital_path(@hospital, mode: "patient_show", patient_id: patient.id),
+    class: "btn btn-info btn-sm" %>
+                 <%= link_to "Edit",
+    hospital_path(@hospital,
+      mode: "patient_edit",
+      patient_id: patient.id),
+    class: "btn btn-primary btn-sm" %>
+                  <%= button_to "Delete",
+                      hospital_patient_path(@hospital, patient),
+                      method: :delete,
+                      data: { turbo_confirm: "Are you sure?" },
+                      class: "btn btn-danger btn-sm" %>
+</div>
+      </div>
+
+    <% end %>
+
+  </div>
+</div>
+
+
+<% end %>
+<% if @mode == "patient_form" %>
+
+<div class="container mt-2 d-flex justify-content-center mb-3">
+   
+  <div class="card shadow-lg border-0 rounded-4 w-100 w-md-75 ">
+        <!-- Header -->
+        <div class="card-header bg-success text-white rounded-top-4">
+          <h4 class="mb-0">
+            <i class="bi bi-person-plus-fill me-2"></i>
+            Add Patient
+          </h4>
+        </div>
+
+        <div class="card-body p-2">
+
+          <% if @patient.errors.any? %>
+            <div class="alert alert-danger rounded-3">
+          
+              <ul class="mb-0">
+                <% @patient.errors.full_messages.each do |msg| %>
+                  <li><%= msg %></li>
+                <% end %>
+              </ul>
+            </div>
+          <% end %>
+
+          <%= form_with model: @patient,
+              url: hospital_patients_path(@hospital),
+              local: true do |f| %>
+
+            <div class="row g-3">
+
+              <div class="col-md-6">
+                <%= f.label :name, class: "form-label fw-semibold" %>
+                <%= f.text_field :name,
+                    class: "form-control rounded-3",
+                    placeholder: "Enter patient name" %>
+              </div>
+
+              <div class="col-md-6">
+                <%= f.label :email, class: "form-label fw-semibold" %>
+                <%= f.email_field :email,
+                    class: "form-control rounded-3",
+                    placeholder: "example@gmail.com" %>
+              </div>
+
+              <div class="col-md-6">
+                <%= f.label :age, class: "form-label fw-semibold" %>
+                <%= f.number_field :age,
+                    class: "form-control rounded-3",
+                    placeholder: "Enter age" %>
+              </div>
+
+              <div class="col-md-6">
+                <%= f.label :phone, class: "form-label fw-semibold" %>
+                <%= f.text_field :phone,
+                    class: "form-control rounded-3",
+                    placeholder: "Enter phone number" %>
+              </div>
+
+              <div class="col-12">
+                <%= f.label :disease, class: "form-label fw-semibold" %>
+                <%= f.text_field :disease,
+                    class: "form-control rounded-3",
+                    placeholder: "Enter disease details" %>
+              </div>
+
+              <div class="col-md-6">
+                <%= f.label :password, class: "form-label fw-semibold" %>
+                <%= f.password_field :password,
+                    class: "form-control rounded-3",
+                    autocomplete: "new-password",
+                    placeholder: "Enter password" %>
+              </div>
+
+              <div class="col-md-6">
+                <%= f.label :password_confirmation,
+                    class: "form-label fw-semibold" %>
+                <%= f.password_field :password_confirmation,
+                    class: "form-control rounded-3",
+                    autocomplete: "new-password",
+                    placeholder: "Confirm password" %>
+              </div>
+
+            </div>
+
+            <div class="d-flex justify-content-end gap-2 mt-2">
+
+              <%= link_to "Cancel",
+                  hospital_path(@hospital, mode: "patient_table"),
+                  class: "btn btn-outline-secondary px-4" %>
+
+              <%= f.submit "Create Patient",
+                  class: "btn btn-success px-4" %>
+
+            </div>
+
+          <% end %>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<% end %>
+<% if @edit_patient %>
+
+<div class="container py-4">
+  <div class="row justify-content-center">
+
+    <div class="col-lg-8 col-md-12">
+
+      <div class="card border-0 shadow-lg rounded-4">
+
+        <!-- Header -->
+        <div class="card-header bg-warning text-dark rounded-top-4">
+          <h4 class="mb-0">
+            <i class="bi bi-pencil-square me-2"></i>
+            Edit Patient
+          </h4>
+        </div>
+
+        <div class="card-body p-4">
+
+          <% if @patient.errors.any? %>
+            <div class="alert alert-danger rounded-3">
+              <h6>Please fix the following errors:</h6>
+              <ul class="mb-0">
+                <% @patient.errors.full_messages.each do |msg| %>
+                  <li><%= msg %></li>
+                <% end %>
+              </ul>
+            </div>
+          <% end %>
+
+          <%= form_with model: @patient,
+              url: hospital_patient_path(@hospital, @patient),
+              method: :patch do |f| %>
+
+            <div class="row g-3">
+
+              <div class="col-md-6">
+                <%= f.label :name, class: "form-label fw-semibold" %>
+                <%= f.text_field :name,
+                    class: "form-control rounded-3" %>
+              </div>
+
+              <div class="col-md-6">
+                <%= f.label :email, class: "form-label fw-semibold" %>
+                <%= f.email_field :email,
+                    class: "form-control rounded-3" %>
+              </div>
+
+              <div class="col-md-6">
+                <%= f.label :age, class: "form-label fw-semibold" %>
+                <%= f.number_field :age,
+                    class: "form-control rounded-3" %>
+              </div>
+
+              <div class="col-md-6">
+                <%= f.label :phone, class: "form-label fw-semibold" %>
+                <%= f.text_field :phone,
+                    class: "form-control rounded-3" %>
+              </div>
+
+              <div class="col-12">
+                <%= f.label :disease, class: "form-label fw-semibold" %>
+                <%= f.text_field :disease,
+                    class: "form-control rounded-3" %>
+              </div>
+
+                      
+            </div>
+
+            <!-- Buttons -->
+            <div class="d-flex justify-content-end gap-2 mt-4">
+
+              <%= link_to "Cancel",
+                  hospital_path(@hospital, mode: "patient_table"),
+                  class: "btn btn-outline-secondary px-4" %>
+
+              <%= f.submit "Update Patient",
+                  class: "btn btn-warning px-4" %>
+
+            </div>
+
+          <% end %>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<% end %>
+
+<% if @mode == "appointment_table" %>
+  <div class="d-none d-md-block">
+    <div class="container d-flex justify-content-center mt-5 mb-3">
+   <div class="card border-0 shadow-lg rounded-4 w-100">
+
+  <div class="card-header bg-primary text-white rounded-top-4 d-flex justify-content-between align-items-center">
+    <h5 class="mb-0">
+      <i class="bi bi-calendar-check me-2"></i>
+      Appointments
+    </h5>
+
+    <%= link_to hospital_path(@hospital, mode: "appointment_form"),
+        class: "btn btn-light btn-sm fw-bold" do %>
+      <i class="bi bi-plus-circle"></i> Add Appointment
+    <% end %>
+  </div>
+
+
+        <% if @appointments.present? && @appointments.any? %>
+      <div class="table-responsive">
+  <table class="table align-middle table-hover" style="min-width: 800px;">
+
+
+    <thead class="table-light sticky-top">
+      <tr>
+        <th class="text-center">Patient</th>
+        <th  class="text-center">Doctor</th>
+        <th  class="text-center">Date & Time</th>
+        <th  class="text-center">Status</th>
+        <th  class="text-center">Type</th>
+        <th  class="text-center">Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+
+      <% @appointments.each do |appointment| %>
+
+        <tr>
+
+          <td class="fw-semibold text-center">
+            <%= appointment.patient&.name %>
+          </td>
+
+          <td class=" text-center">
+            <%= appointment.doctor&.name %>
+          </td>
+
+          <td class=" text-center">
+            <%= appointment.scheduled_at&.strftime("%d %b %Y, %I:%M %p") %>
+          </td>
+
+          <td class=" text-center">
+            <% if appointment.status == "Completed" %>
+              <span class="badge bg-success">
+                Completed
+              </span>
+            <% elsif appointment.status == "Cancelled" %>
+              <span class="badge bg-danger">
+                Cancelled
+              </span>
+            <% else %>
+              <span class="badge bg-warning text-dark">
+                <%= appointment.status %>
+              </span>
+            <% end %>
+          </td>
+
+          <td class=" text-center">
+            <span class="badge bg-info text-dark">
+              <%= appointment.appointment_type %>
+            </span>
+          </td>
+
+          <td class="text-center">
+
+            <div class="d-flex justify-content-center gap-1 flex-wrap">
+
+              <%= link_to "View",
+                  hospital_path(@hospital,
+                  mode: "appointment_show",
+                  appointment_id: appointment.id),
+                  class: "btn btn-info btn-sm" %>
+
+              <%= link_to "Edit",
+                  hospital_path(@hospital,
+                  mode: "appointment_edit",
+                  appointment_id: appointment.id),
+                  class: "btn btn-warning btn-sm" %>
+
+              <%= button_to "Delete",
+                  hospital_appointment_path(@hospital, appointment),
+                  method: :delete,
+                  data: { turbo_confirm: "Delete this appointment?" },
+                  class: "btn btn-danger btn-sm" %>
+
+            </div>
+
+          </td>
+
+        </tr>
+
+      <% end %>
+
+    </tbody>
+
+  </table>
+
+</div>
+        <% else %>
+          <p class="text-center mt-3">No appointments found.</p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+ <div class="d-block d-md-none">
+
+  <div class="card border-0 shadow-sm rounded-4 mb-3">
+
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+
+      <h6 class="mb-0">
+        Appointments
+      </h6>
+
+      <%= link_to hospital_path(@hospital, mode: "appointment_form"),
+          class: "btn btn-light btn-sm" do %>
+
+        <i class="bi bi-plus"></i>
+
+      <% end %>
+
+    </div>
+
+  </div>
+
+  <% @appointments.each do |appointment| %>
+
+    <div class="card border-1 shadow-sm rounded-4 mb-3">
+
+      <div class="card-body">
+
+        <div class="d-flex justify-content-between align-items-center mb-2">
+
+          <h6 class="fw-bold mb-0">
+          <strong>Name:</strong>
+            <%= appointment.patient&.name %>
+          </h6>
+
+          <span class="badge bg-secondary">
+            <%= appointment.appointment_type %>
+          </span>
+
+        </div>
+
+        <p class="mb-1">
+          <strong>Doctor:</strong>
+          <%= appointment.doctor&.name %>
+        </p>
+
+        <p class="mb-1">
+          <strong>Date:</strong>
+          <%= appointment.scheduled_at&.strftime("%d %b %Y, %I:%M %p") %>
+        </p>
+
+        <p class="mb-2">
+          <strong>Status:</strong>
+
+          <% if appointment.status == "Completed" %>
+            <span class="badge bg-success">Completed</span>
+          <% elsif appointment.status == "Cancelled" %>
+            <span class="badge bg-danger">Cancelled</span>
+          <% else %>
+            <span class="badge bg-warning text-dark">
+              <%= appointment.status %>
+            </span>
+          <% end %>
+        </p>
+
+        <p>
+        <strong>Reason:</strong>
+          <%= appointment.reason.presence || "No reason provided" %>
+        </p>
+
+        <div class="d-flex gap-2">
+
+          <%= link_to "View",
+              hospital_path(@hospital,
+              mode: "appointment_show",
+              appointment_id: appointment.id),
+              class: "btn btn-info btn-sm flex-fill" %>
+
+          <%= link_to "Edit",
+              hospital_path(@hospital,
+              mode: "appointment_edit",
+              appointment_id: appointment.id),
+              class: "btn btn-warning btn-sm flex-fill" %>
+
+        </div>
+
+        <div class="mt-2">
+
+          <%= button_to "Delete",
+              hospital_appointment_path(@hospital, appointment),
+              method: :delete,
+              data: { turbo_confirm: "Delete this appointment?" },
+              class: "btn btn-danger btn-sm w-100" %>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  <% end %>
+
+</div>
+<% end %>
+<% if @mode == "appointment_form" || @mode == "appointment_edit" %>
+
+<div class="container py-4">
+
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+
+      <div class="card border-0 shadow-lg rounded-4">
+
+        <!-- Header -->
+        <div class="card-header bg-primary text-white rounded-top-4">
+          <h4 class="mb-0">
+            <i class="bi bi-calendar-check me-2"></i>
+            <%= @mode == "appointment_edit" ? "Edit Appointment" : "New Appointment" %>
+          </h4>
+        </div>
+
+        <div class="card-body p-4">
+
+          <% if @appointment&.errors&.any? %>
+            <div class="alert alert-danger rounded-3">
+              <h6 class="fw-bold">Please fix the following errors:</h6>
+              <ul class="mb-0">
+                <% @appointment.errors.full_messages.each do |msg| %>
+                  <li><%= msg %></li>
+                <% end %>
+              </ul>
+            </div>
+          <% end %>
+
+          <%= form_with model: @appointment,
+              url: @mode == "appointment_edit" ?
+              hospital_appointment_path(@hospital, @appointment) :
+              hospital_appointments_path(@hospital),
+              method: @mode == "appointment_edit" ? :patch : :post,
+              local: true do |f| %>
+
+            <div class="row g-3">
+
+              <div class="col-md-6">
+                <%= f.label :patient_id, "Patient", class: "form-label fw-semibold" %>
+                <%= f.collection_select :patient_id,
+                    @hospital.patients,
+                    :id,
+                    :name,
+                    { prompt: "Select Patient" },
+                    class: "form-select" %>
+              </div>
+
+              <div class="col-md-6">
+                <%= f.label :doctor_id, "Doctor", class: "form-label fw-semibold" %>
+                <%= f.collection_select :doctor_id,
+                    @hospital.doctors,
+                    :id,
+                    :name,
+                    { prompt: "Select Doctor" },
+                    class: "form-select" %>
+              </div>
+
+              <div class="col-md-6">
+                <%= f.label :scheduled_at, class: "form-label fw-semibold" %>
+                <%= f.datetime_local_field :scheduled_at,
+                    class: "form-control" %>
+              </div>
+
+              <div class="col-md-6">
+                <%= f.label :appointment_type, class: "form-label fw-semibold" %>
+                <%= f.select :appointment_type,
+                    ["Normal", "Follow Up", "Emergency"],
+                    { prompt: "Select Type" },
+                    class: "form-select" %>
+              </div>
+
+              <div class="col-md-6">
+                <%= f.label :token_number, class: "form-label fw-semibold" %>
+                <%= f.number_field :token_number,
+                    class: "form-control",
+                    placeholder: "Enter token number" %>
+              </div>
+
+              <div class="col-12">
+                <%= f.label :reason, class: "form-label fw-semibold" %>
+                <%= f.text_area :reason,
+                    rows: 4,
+                    class: "form-control",
+                    placeholder: "Enter appointment reason..." %>
+              </div>
+
+            </div>
+
+            <!-- Buttons -->
+            <div class="d-flex flex-column flex-md-row gap-2 justify-content-end mt-4">
+
+              <%= link_to hospital_path(@hospital, mode: "appointment_table"),
+                  class: "btn btn-outline-secondary px-4" do %>
+                <i class="bi bi-arrow-left"></i> Back
+              <% end %>
+
+              <%= f.submit @mode == "appointment_edit" ?
+                  "Update Appointment" :
+                  "Create Appointment",
+                  class: "btn btn-success px-4" %>
+
+            </div>
+
+          <% end %>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<% end %>
+
+<% if @mode == "appointment_show" && @appointment %>
+  <div class="container d-flex justify-content-center mt-5 mb-3">
+    <div class="card shadow p-4 w-75">
+      <h3>Appointment Details</h3>
+      <p><strong>Patient:</strong> <%= @appointment.patient&.name %></p>
+      <p><strong>Doctor:</strong> <%= @appointment.doctor&.name %></p>
+      <p><strong>Scheduled At:</strong> <%= @appointment.scheduled_at ? @appointment.scheduled_at.strftime("%b %d, %Y %H:%M") : "Not scheduled" %></p>
+      <p><strong>Status:</strong> <%= @appointment.status.presence || "N/A" %></p>
+      <p><strong>Notes:</strong> <%= @appointment.reason.presence || "-" %></p>
+
+      <div class="d-flex gap-2 mt-3">
+        <%= link_to "Back",
+            hospital_path(@hospital, mode: "appointment_table"),
+            class: "btn btn-secondary" %>
+        <%= link_to "Edit",
+            hospital_path(@hospital, mode: "appointment_edit", appointment_id: @appointment.id),
+            class: "btn btn-primary" %>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<% if params[:mode] == "patient_show" && @patient %>
+
+<div class="container d-flex justify-content-center mt-5">
+  <div class="card shadow p-4 w-75">
+
+    <h3>Patient Details</h3>
+
+    <p><strong>Name:</strong> <%= @patient.name %></p>
+    <p><strong>Email:</strong> <%= @patient.email %></p>
+    <p><strong>Age:</strong> <%= @patient.age %></p>
+    <p><strong>Disease:</strong> <%= @patient.disease %></p>
+    <p><strong>Phone:</strong> <%= @patient.phone %></p>
+  
+
+    <%= link_to "Back",
+        hospital_path(@hospital, mode: "patient_table"),
+        class: "btn btn-secondary mt-2" %>
+
+  </div>
+</div>
+
+<% end %>

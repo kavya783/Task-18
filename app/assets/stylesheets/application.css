@@ -1,0 +1,19 @@
+.soft-card {
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+.modal-backdrop.show {
+  opacity: 0.3;
+}
+.responsive-width {
+  width: 100%;
+}
+
+@media (min-width: 992px) {
+  .responsive-width {
+    width: 50%;
+    margin: 0 auto;
+  }
+}

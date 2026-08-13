@@ -1,0 +1,176 @@
+<% if hospital&.persisted? %>
+
+  <!-- MOBILE SIDEBAR -->
+  <div class="offcanvas offcanvas-start bg-secondary text-white"
+       tabindex="-1"
+       id="mobileSidebar">
+
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title">Menu</h5>
+      <button type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="offcanvas"></button>
+    </div>
+
+    <div class="offcanvas-body p-0">
+
+      <ul class="nav flex-column">
+
+        <% if patient_signed_in? %>
+
+          <li class="nav-item">
+            <%= link_to "Dashboard",
+                patient_dashboard_path(current_patient),
+                class: patient_sidebar_active_class("dashboard") %>
+          </li>
+
+          <li class="nav-item">
+            <%= link_to "  My Appointments",
+                patient_dashboard_path(current_patient, mode: "appointments"),
+                class: patient_sidebar_active_class("appointments") %>
+          </li>
+
+          <li class="nav-item">
+            <%= link_to " My Prescriptions",
+                patient_dashboard_path(current_patient, mode: "prescriptions"),
+                class: patient_sidebar_active_class("prescriptions") %>
+          </li>
+             
+        <% elsif doctor_signed_in? %>
+
+<li class="nav-item">
+  <%= link_to "Dashboard",
+      doctor_dashboard_path(current_doctor),
+      class: doctor_sidebar_active_class("") %>
+</li>
+
+<li class="nav-item">
+  <%= link_to "My Appointments",
+      doctor_dashboard_path(current_doctor, mode: "appointment_table"),
+      class: doctor_sidebar_active_class("appointment_table") %>
+</li>
+
+<li class="nav-item">
+  <%= link_to "My Prescriptions",
+      doctor_dashboard_path(current_doctor, mode: "prescription_table"),
+      class: doctor_sidebar_active_class("prescription_table") %>
+</li>
+
+
+
+        <% else %>
+
+          <li class="nav-item">
+            <%= link_to "Dashboard",
+                hospital_path(hospital, mode: "hospital_details"),
+                class: sidebar_active_class("hospital_details") %>
+          </li>
+
+          <li class="nav-item">
+            <%= link_to "Doctors",
+                hospital_path(hospital, mode: "doctor_table"),
+                class: sidebar_active_class("doctor_table") %>
+          </li>
+
+          <li class="nav-item">
+            <%= link_to "Patients",
+                hospital_path(hospital, mode: "patient_table"),
+                class: sidebar_active_class("patient_table") %>
+          </li>
+
+          <li class="nav-item">
+            <%= link_to "Appointments",
+                hospital_path(hospital, mode: "appointment_table"),
+                class: sidebar_active_class("appointment_table") %>
+          </li>
+
+        <% end %>
+
+      </ul>
+
+    </div>
+  </div>
+
+
+  <!-- DESKTOP SIDEBAR -->
+<div class="col-lg-2 d-none d-lg-block bg-secondary text-white vh-100 p-3">
+
+    <h4 class="text-center mb-4">Menu</h4>
+
+    <ul class="nav flex-column">
+
+      <% if patient_signed_in? %>
+
+        <li class="nav-item">
+          <%= link_to " Patient Dashboard",
+              patient_dashboard_path(current_patient),
+              class: patient_sidebar_active_class("dashboard") %>
+        </li>
+
+        <li class="nav-item">
+          <%= link_to " My Appointments",
+              patient_dashboard_path(current_patient, mode: "appointments"),
+              class: patient_sidebar_active_class("appointments") %>
+        </li>
+
+        <li class="nav-item">
+          <%= link_to " My Prescriptions",
+              patient_dashboard_path(current_patient, mode: "prescriptions"),
+              class: patient_sidebar_active_class("prescriptions") %>
+        </li>
+
+      <% elsif doctor_signed_in? %>
+
+        <li class="nav-item">
+          <%= link_to " Doctor Dashboard",
+              doctor_dashboard_path(current_doctor),
+              class: doctor_sidebar_active_class("") %>
+        </li>
+
+       
+
+        <li class="nav-item">
+          <%= link_to "My Appointments",
+              doctor_dashboard_path(current_doctor, mode: "appointment_table"),
+              class: doctor_sidebar_active_class("appointment_table") %>
+        </li>
+
+        <li class="nav-item">
+          <%= link_to "My Prescriptions",
+              doctor_dashboard_path(current_doctor, mode: "prescription_table"),
+              class: doctor_sidebar_active_class("prescription_table") %>
+        </li>
+
+      <% else %>
+
+        <li class="nav-item">
+          <%= link_to "Dashboard",
+              hospital_path(hospital, mode: "hospital_details"),
+              class: sidebar_active_class("hospital_details") %>
+        </li>
+
+        <li class="nav-item">
+          <%= link_to "Doctors",
+              hospital_path(hospital, mode: "doctor_table"),
+              class: sidebar_active_class("doctor_table") %>
+        </li>
+
+        <li class="nav-item">
+          <%= link_to "Patients",
+              hospital_path(hospital, mode: "patient_table"),
+              class: sidebar_active_class("patient_table") %>
+        </li>
+
+        <li class="nav-item">
+          <%= link_to "Appointments",
+              hospital_path(hospital, mode: "appointment_table"),
+              class: sidebar_active_class("appointment_table") %>
+        </li>
+
+      <% end %>
+
+    </ul>
+
+  </div>
+
+<% end %>

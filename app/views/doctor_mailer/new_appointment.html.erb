@@ -1,0 +1,14 @@
+<h2>New Appointment</h2>
+
+<p>Hello Dr. <%= @doctor.name %>,</p>
+
+<p>You have received a new appointment.</p>
+
+<ul>
+  <li><b>Patient:</b> <%= @appointment.patient.name %></li>
+  <li><b>Date:</b> <%= @appointment.scheduled_at %></li>
+  <li><b>Type:</b> <%= @appointment.appointment_type %></li>
+  <li><b>Reason:</b> <%= @appointment.reason %></li>
+</ul>
+
+<p>Please check your dashboard for more details.</p>

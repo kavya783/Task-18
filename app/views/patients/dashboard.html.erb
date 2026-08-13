@@ -1,0 +1,331 @@
+<div class="container-fluid py-4">
+  <% if @mode == "dashboard" %>
+ <div class="d-none d-lg-block">
+  <div class="container mt-4">
+
+    <div class="card shadow-lg border-0 rounded-4 w-75 mx-auto">
+      
+    
+      <div class="card-header bg-warning text-black rounded-top-4">
+        <h4 class="mb-0">Patient Details</h4>
+      </div>
+
+      <div class="card-body p-4">
+
+        <div class="row g-4">
+
+         <div class="col-md-6">
+            <div class="p-3 bg-light rounded-3 h-100">
+
+              <h6 class="text-secondary mb-3">Personal Info</h6>
+
+              <p class="mb-2"><strong>Name:</strong> <%= @patient.name %></p>
+              <p class="mb-2"><strong>Age:</strong> <%= @patient.age %></p>
+              <p class="mb-2"><strong>Phone:</strong> <%= @patient.phone %></p>
+              <p class="mb-0"><strong>Disease:</strong> <%= @patient.disease %></p>
+
+            </div>
+          </div>
+
+
+          <div class="col-md-6">
+            <div class="p-3 bg-light rounded-3 h-100">
+
+              <h6 class="text-secondary mb-3">Medical Info</h6>
+
+              <p class="mb-2">
+                <strong>Hospital:</strong>
+                <span class="text-dark">
+                  <%= @patient.hospital&.name || "Not assigned" %>
+                </span>
+              </p>
+
+              <p class="mb-2">
+                <strong>Total Appointments:</strong>
+                <span class="badge bg-info text-dark">
+                  <%= @appointments.size %>
+                </span>
+              </p>
+
+              <p class="mb-0">
+                <strong>Total Prescriptions:</strong>
+                <span class="badge bg-success">
+                  <%= @prescriptions.size %>
+                </span>
+              </p>
+
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>
+    <div class="d-block d-lg-none">
+     <div class="card shadow-lg border-0 rounded-4 w-100 mx-auto">
+      
+    
+      <div class="card-header bg-warning text-black rounded-top-4">
+        <h4 class="mb-0">Patient Dashboard</h4>
+      </div>
+
+      <div class="card-body p-4">
+
+        <div class="row g-4">
+
+         <div class="col-md-6">
+            <div class="p-3 bg-light rounded-3-1 h-100">
+
+              <h6 class="text-secondary mb-3">Personal Info</h6>
+
+              <p class="mb-2"><strong>Name:</strong> <%= @patient.name %></p>
+              <p class="mb-2"><strong>Age:</strong> <%= @patient.age %></p>
+              <p class="mb-2"><strong>Phone:</strong> <%= @patient.phone %></p>
+              <p class="mb-0"><strong>Disease:</strong> <%= @patient.disease %></p>
+
+            </div>
+          </div>
+
+
+          <div class="col-md-6 ">
+            <div class="p-3 bg-light rounded-3 h-100">
+
+              <h6 class="text-secondary mb-3">Medical Info</h6>
+
+              <p class="mb-2">
+                <strong>Hospital:</strong>
+                <span class="text-dark">
+                  <%= @patient.hospital&.name || "Not assigned" %>
+                </span>
+              </p>
+
+              <p class="mb-2">
+                <strong>Total Appointments:</strong>
+                <span class="badge bg-info text-dark">
+                  <%= @appointments.size %>
+                </span>
+              </p>
+
+              <p class="mb-0">
+                <strong>Total Prescriptions:</strong>
+                <span class="badge bg-success">
+                  <%= @prescriptions.size %>
+                </span>
+              </p>
+
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+    </div>
+ <% elsif @mode == "appointments" %>
+
+<div class="container mt-4">
+
+  <div class="card shadow-lg border-0 rounded-4">
+
+    <!-- Header -->
+    <div class="card-header bg-success text-white rounded-top-4">
+      <h4 class="mb-0">My Appointments</h4>
+    </div>
+
+    <div class="card-body">
+
+      <% if @appointments.any? %>
+
+        <!-- Desktop View -->
+        <div class="d-none d-md-block">
+
+          <div class="table-responsive">
+            <table class="table table-hover table table-bordered">
+
+              <thead class="table-light">
+                <tr>
+                  <th>Doctor</th>
+                  <th>Date & Time</th>
+                  <th>Status</th>
+                  <th>Reason</th>
+                  <th>Type</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <% @appointments.each do |appointment| %>
+
+                  <tr>
+
+                    <td>
+                      <strong><%= appointment.doctor&.name %></strong>
+                    </td>
+
+                    <td>
+                      <%= appointment.scheduled_at&.strftime("%b %d, %Y %H:%M") || appointment.created_at.strftime("%b %d, %Y %H:%M") %>
+                    </td>
+
+                    <td>
+                      <% status = appointment.status.presence || "N/A" %>
+
+                      <% if status == "Completed" %>
+                        <span class="badge bg-success"><%= status %></span>
+                      <% elsif status == "Upcoming" %>
+                        <span class="badge bg-warning text-dark"><%= status %></span>
+                      <% elsif status == "Cancelled" %>
+                        <span class="badge bg-danger"><%= status %></span>
+                      <% else %>
+                        <span class="badge bg-secondary"><%= status %></span>
+                      <% end %>
+
+                    </td>
+
+                    <td><%= appointment.reason.presence || "-" %></td>
+                    <td><%= appointment.appointment_type.presence || "N/A" %></td>
+
+                  </tr>
+
+                <% end %>
+              </tbody>
+
+            </table>
+          </div>
+
+        </div>
+
+   <div class="d-block d-md-none">
+
+  <% @appointments.each do |appointment| %>
+
+    <% status = appointment.status.presence || "N/A" %>
+
+    <div class="card mb-3 shadow-sm border-1 rounded-3">
+
+      <div class="card-body">
+
+        <h6 class="mb-2">
+          <strong>Doctor:</strong> <%= appointment.doctor&.name %>
+        </h6>
+
+        <p class="mb-1">
+          <strong>Date:</strong>
+          <%= appointment.scheduled_at&.strftime("%d %b %Y %H:%M") || appointment.created_at.strftime("%d %b %Y %H:%M") %>
+        </p>
+
+        <p class="mb-1">
+          <strong>Reason:</strong>
+          <%= appointment.reason.presence || "-" %>
+        </p>
+
+        <p class="mb-2">
+          <strong>Type:</strong>
+          <%= appointment.appointment_type.presence || "N/A" %>
+        </p>
+
+        <div class="mt-1">
+          <strong>Status:</strong>
+
+        <% if status == "Completed" %>
+          <span class="badge bg-success"><%= status %></span>
+
+        <% elsif status == "Upcoming" %>
+          <span class="badge bg-warning text-dark"><%= status %></span>
+
+        <% elsif status == "Cancelled" %>
+          <span class="badge bg-danger"><%= status %></span>
+
+        <% else %>
+          <span class="badge bg-secondary"><%= status %></span>
+        <% end %>
+  </div>
+      </div>
+
+    </div>
+
+  <% end %>
+
+</div>
+
+      <% else %>
+
+        <div class="text-center py-4">
+          <p class="text-muted mb-0">You have no appointments yet.</p>
+        </div>
+
+      <% end %>
+
+    </div>
+  </div>
+
+</div>
+
+
+  <% elsif @mode == "prescriptions" %>
+   <div class="d-none d-lg-block">
+ <div class="card shadow-lg border-1 rounded-4 mb-3 w-75 ">
+
+    <div class="card-header bg-danger text-white py-2 rounded-top-4">
+    <h5 class="mb-0">My Prescriptions</h5>
+  </div>
+    <div class="card-body p-3 w-75">
+        <% if @prescriptions.any? %>
+          <% @prescriptions.each do |prescription| %>
+            <div class="card mb-3">
+              <div class="card-body">
+                <p><strong>Doctor:</strong> <%= prescription.doctor&.name %></p>
+                <p><strong>Prescribed on:</strong> <%= prescription.created_at.strftime("%b %d, %Y") %></p>
+                <div>
+                <div class="mt-1">
+              <span class="text-dark">
+                <strong>Prescription:</strong><%= prescription.prescription || "No details provided." %>
+              </span>
+            </div> 
+                </div>
+              </div>
+            </div>
+          <% end %>
+        <% else %>
+          <p>No prescriptions available.</p>
+        <% end %>
+      </div>
+    </div>
+    </div>
+    <div class="d-block d-lg-none">
+    
+ <div class="card shadow-lg border-1 rounded-4 mb-3 w-100 ms-1 ">
+     <div class="card-header bg-primary text-white py-2 rounded-top-4">
+    <h5 class="mb-0">My Prescriptions</h5>
+  </div>
+     <div class="card-body p-3 w-100">
+        <% if @prescriptions.any? %>
+          <% @prescriptions.each do |prescription| %>
+            <div class="card mb-3">
+              <div class="card-body">
+                <p><strong>Doctor:</strong> <%= prescription.doctor&.name %></p>
+                <p><strong>Prescribed on:</strong> <%= prescription.created_at.strftime("%b %d, %Y") %></p>
+                <div>
+                <div class="mt-1">
+              <span class="text-dark">
+                <strong>Prescription:</strong><%= prescription.prescription || "No details provided." %>
+              </span>
+            </div> 
+                </div>
+              </div>
+            </div>
+          <% end %>
+        <% else %>
+          <p>No prescriptions available.</p>
+        <% end %>
+      </div>
+    </div>
+    </div>
+    </div>
+  <% else %>
+    <div class="alert alert-info">Invalid dashboard section.</div>
+  <% end %>
+</div>

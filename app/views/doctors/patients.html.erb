@@ -1,0 +1,36 @@
+<div class="container mt-4">
+  <div class="card shadow p-4 w-90 mx-auto">
+    <h1>My Patients</h1>
+
+    <% if @patients.any? %>
+      <div class="table-responsive">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Age</th>
+              <th>Disease</th>
+              <th>Phone</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @patients.each do |patient| %>
+              <tr>
+                <td><%= patient.name %></td>
+                <td><%= patient.age %></td>
+                <td><%= patient.disease %></td>
+                <td><%= patient.phone %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      <p>No patients assigned.</p>
+    <% end %>
+
+    <div class="mt-3">
+      <%= link_to "Back to Dashboard", doctor_dashboard_path(@doctor), class: "btn btn-secondary" %>
+    </div>
+  </div>
+</div>

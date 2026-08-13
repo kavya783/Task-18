@@ -1,0 +1,49 @@
+<%= form_with model: @hospital, local: true do |f| %>
+
+  
+  <div class="d-flex justify-content-center">
+    <div class="card p-4 w-75 w-md-50">
+<% if @hospital.errors.any? %>
+    <div class="alert alert-danger">
+      <ul>
+        <% @hospital.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+      <div class="mb-3">
+        <%= f.label :name %>
+        <%= f.text_field :name, class: "form-control" %>
+      </div>
+
+      <div class="mb-3">
+        <%= f.label :email %>
+        <%= f.text_field :email, class: "form-control" %>
+      </div>
+
+      <div class="mb-3">
+        <%= f.label :phone %>
+        <%= f.text_field :phone, class: "form-control" %>
+      </div>
+
+      <div class="mb-3">
+        <%= f.label :city %>
+        <%= f.text_field :city, class: "form-control" %>
+      </div>
+       <div class="d-none d-md-block">
+      <div class="text-center">
+        <%= f.submit class: "btn btn-warning w-25" %>
+      </div>
+      </div>
+       <div class="d-block d-md-none">
+      <div class="text-center">
+        <%= f.submit class: "btn btn-warning w-75" %>
+      </div>
+      </div>
+
+    </div>
+  </div>
+
+<% end %>

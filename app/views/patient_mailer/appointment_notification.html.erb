@@ -1,0 +1,27 @@
+<h2> Kusuma Hospital Appointment  is <%= @status_message %></h2>
+
+<p>Hello <%= @patient.name %>,</p>
+
+<p>
+Your appointment has been <b> <%= @status_message %></b>.
+</p>
+
+<p>
+<strong>Date & Time:</strong>
+<%= @appointment.scheduled_at.strftime("%d-%m-%Y %I:%M %p") %>
+</p>
+
+<p>
+<strong>Doctor:</strong>
+<%= @appointment.doctor.name %>
+</p>
+
+<p>
+<strong>Token Number:</strong>
+<%= @appointment.token_number %>
+</p>
+
+<p>
+Thank You,<br>
+ Kusuma Hospital Management.
+</p>
