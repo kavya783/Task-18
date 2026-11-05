@@ -1,12 +1,16 @@
+
 <%
-  hospital = current_hospital ||
+  hospital = Hospital.find_by(id: session[:hospital_id]) ||
              @hospital ||
-             current_user&.hospitals&.first ||
              current_doctor&.hospital ||
              current_patient&.hospital
+
+  if hospital.nil? && user_signed_in?
+    hospital = current_user&.hospitals&.first
+  end
 %>
 
-<% if hospital.present? %>
+<% if hospital.present? || doctor_signed_in? || patient_signed_in? || user_signed_in? %>
 
   <!-- MOBILE SIDEBAR -->
   <div class="offcanvas offcanvas-start bg-secondary text-white"
@@ -21,7 +25,6 @@
     </div>
 
     <div class="offcanvas-body p-0">
-
       <ul class="nav flex-column">
 
         <% if patient_signed_in? %>
@@ -33,38 +36,36 @@
           </li>
 
           <li class="nav-item">
-            <%= link_to "  My Appointments",
+            <%= link_to "My Appointments",
                 patient_dashboard_path(current_patient, mode: "appointments"),
                 class: patient_sidebar_active_class("appointments") %>
           </li>
 
           <li class="nav-item">
-            <%= link_to " My Prescriptions",
+            <%= link_to "My Prescriptions",
                 patient_dashboard_path(current_patient, mode: "prescriptions"),
                 class: patient_sidebar_active_class("prescriptions") %>
           </li>
-             
+
         <% elsif doctor_signed_in? %>
 
-<li class="nav-item">
-  <%= link_to "Dashboard",
-      doctor_dashboard_path(current_doctor),
-      class: doctor_sidebar_active_class("") %>
-</li>
+          <li class="nav-item">
+            <%= link_to "Dashboard",
+                doctor_dashboard_path(current_doctor),
+                class: doctor_sidebar_active_class("") %>
+          </li>
 
-<li class="nav-item">
-  <%= link_to "My Appointments",
-      doctor_dashboard_path(current_doctor, mode: "appointment_table"),
-      class: doctor_sidebar_active_class("appointment_table") %>
-</li>
+          <li class="nav-item">
+            <%= link_to "My Appointments",
+                doctor_dashboard_path(current_doctor, mode: "appointment_table"),
+                class: doctor_sidebar_active_class("appointment_table") %>
+          </li>
 
-<li class="nav-item">
-  <%= link_to "My Prescriptions",
-      doctor_dashboard_path(current_doctor, mode: "prescription_table"),
-      class: doctor_sidebar_active_class("prescription_table") %>
-</li>
-
-
+          <li class="nav-item">
+            <%= link_to "My Prescriptions",
+                doctor_dashboard_path(current_doctor, mode: "prescription_table"),
+                class: doctor_sidebar_active_class("prescription_table") %>
+          </li>
 
         <% else %>
 
@@ -95,13 +96,11 @@
         <% end %>
 
       </ul>
-
     </div>
   </div>
 
-
   <!-- DESKTOP SIDEBAR -->
-<div class="col-lg-2 d-none d-lg-block bg-secondary text-white vh-100 p-3">
+  <div class="col-lg-2 d-none d-lg-block bg-secondary text-white vh-100 p-3">
 
     <h4 class="text-center mb-4">Menu</h4>
 
@@ -110,19 +109,19 @@
       <% if patient_signed_in? %>
 
         <li class="nav-item">
-          <%= link_to " Patient Dashboard",
+          <%= link_to "Patient Dashboard",
               patient_dashboard_path(current_patient),
               class: patient_sidebar_active_class("dashboard") %>
         </li>
 
         <li class="nav-item">
-          <%= link_to " My Appointments",
+          <%= link_to "My Appointments",
               patient_dashboard_path(current_patient, mode: "appointments"),
               class: patient_sidebar_active_class("appointments") %>
         </li>
 
         <li class="nav-item">
-          <%= link_to " My Prescriptions",
+          <%= link_to "My Prescriptions",
               patient_dashboard_path(current_patient, mode: "prescriptions"),
               class: patient_sidebar_active_class("prescriptions") %>
         </li>
@@ -130,12 +129,10 @@
       <% elsif doctor_signed_in? %>
 
         <li class="nav-item">
-          <%= link_to " Doctor Dashboard",
+          <%= link_to "Doctor Dashboard",
               doctor_dashboard_path(current_doctor),
               class: doctor_sidebar_active_class("") %>
         </li>
-
-       
 
         <li class="nav-item">
           <%= link_to "My Appointments",
@@ -178,7 +175,6 @@
       <% end %>
 
     </ul>
-
   </div>
 
 <% end %>
