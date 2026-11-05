@@ -1,4 +1,5 @@
 class SessionsController < ApplicationController
+
   def new
     render "devise/sessions/new"
   end
@@ -13,7 +14,7 @@ class SessionsController < ApplicationController
       session[:hospital_id] = hospital.id
       redirect_to hospital_path(hospital)
 
-    elsif doctor = Doctor.find_by(email: email)
+    elsif (doctor = Doctor.find_by(email: email))
       if doctor.authenticate(password)
         session[:doctor_id] = doctor.id
         redirect_to doctor_dashboard_path(doctor)
@@ -21,7 +22,7 @@ class SessionsController < ApplicationController
         invalid_login
       end
 
-    elsif patient = Patient.find_by(email: email)
+    elsif (patient = Patient.find_by(email: email))
       if patient.authenticate(password)
         session[:patient_id] = patient.id
         redirect_to patient_dashboard_path(patient)
@@ -41,7 +42,7 @@ class SessionsController < ApplicationController
 
   def destroy_patient
     session.delete(:patient_id)
-    redirect_to patient_sign_in_path,
+    redirect_to "/patient_sign_in",
                 notice: "Patient logged out successfully."
   end
 
@@ -49,7 +50,9 @@ class SessionsController < ApplicationController
 
   def invalid_login
     @error_message = "Invalid email or password"
+
     render "devise/sessions/new",
            status: :unprocessable_entity
   end
+
 end
