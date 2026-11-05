@@ -1,14 +1,16 @@
 class HospitalsController < ApplicationController
+  
   before_action :authenticate_user_or_doctor!
+def index
+  if user_signed_in?
+    hospital = current_user.hospitals.first
+  
 
-  def index
-    if user_signed_in?
-      hospital = current_user.hospitals.first
-      if hospital.present?
-        redirect_to hospital_path(hospital)
-      else
-        redirect_to new_hospital_path
-      end
+    if hospital.present?
+      redirect_to hospital_path(hospital)
+    else
+      redirect_to new_hospital_path
+    end
     elsif doctor_signed_in?
       redirect_to hospital_path(current_doctor.hospital, mode: "doctor_table")
     else
@@ -75,11 +77,15 @@ end
 def upload_image
   @hospital = Hospital.find(params[:id])
 
-  if params[:hospital].present? && params[:hospital][:image].present?
+  begin
     @hospital.image.attach(params[:hospital][:image])
+
     flash[:notice] = "Image uploaded successfully"
-  else
-    flash[:alert] = "Please select an image first"
+  rescue => e
+    Rails.logger.error "ERROR CLASS: #{e.class}"
+    Rails.logger.error "ERROR MESSAGE: #{e.message}"
+
+    flash[:alert] = e.message
   end
 
   redirect_to hospital_path(@hospital)

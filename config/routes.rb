@@ -1,53 +1,84 @@
 Rails.application.routes.draw do
-  get "api/session"
+  devise_for :admin_users, ActiveAdmin::Devise.config
+
+  ActiveAdmin.routes(self)
   devise_for :users
 
+   # ========================
+  # WEB ROUTES
+  # ========================
+
   get "/sign_in", to: "sessions#new", as: :new_session
-  post "/sign_in", to: "sessions#create", as: :session
+  post "/sign_in", to: "sessions#create"
+  match "/sign_out", to: "sessions#destroy", via: [:get, :delete]
 
-  get "/doctor_sign_in", to: "sessions#new", as: :new_doctor_session
-  post "/doctor_sign_in", to: "sessions#create", as: :doctor_session
-  match "/doctor_sign_out", to: "sessions#destroy", via: [:get, :delete], as: :destroy_doctor_session
+  get "/doctor_sign_in", to: "sessions#new"
+  post "/doctor_sign_in", to: "sessions#create"
+  match "/doctor_sign_out", to: "sessions#destroy", via: [:get, :delete]
 
-  get "/patient_sign_in", to: "sessions#new", as: :new_patient_session
-  post "/patient_sign_in", to: "sessions#create", as: :patient_session
-  match "/patient_sign_out", to: "sessions#destroy_patient", via: [:get, :delete], as: :destroy_patient_session
-  get "patient_dashboard/:id", to: "patients#dashboard", as: :patient_dashboard
+  get "/patient_sign_in", to: "sessions#new"
+  post "/patient_sign_in", to: "sessions#create"
+delete "/patient_sign_out",
+       to: "sessions#destroy_patient",
+       as: :patient_sign_out
+resources :hospitals do
+  resources :doctors
+  resources :patients
 
-  get "doctor_dashboard/:id", to: "doctors#dashboard", as: :doctor_dashboard
-  get "doctor_patients", to: "doctors#patients", as: :doctor_patients
- resources :prescriptions, only: [:create, :destroy,:edit, :update]
-    root "hospitals#index"
-  authenticated :user do
-    root "hospitals#index", as: :authenticated_root
-  end
-
-  unauthenticated do
-    root "sessions#new", as: :unauthenticated_root
-  end
-
-  resources :hospitals do
-    resource :profile
-      member do
-    patch :upload_image
-    delete :remove_image
-  end
-
-    resources :doctors
-    resources :patients
-    resources :appointments do
-      member do
-        patch :update_status
-      end
+  resources :appointments do
+    member do
+      patch :update_status
     end
   end
-namespace :api do
-  post "login", to: "sessions#create"
 
-  resources :doctors, only: [:index, :show]
-  resources :hospitals, only: [:index]
+  member do
+    delete :remove_image
+    patch :upload_image
+  end
 end
 
+get "patient_dashboard/:id",
+    to: "patients#dashboard",
+    as: :patient_dashboard
+
+get "doctor_dashboard/:id",
+    to: "doctors#dashboard",
+    as: :doctor_dashboard
+
+get "doctor_patients",
+    to: "doctors#patients",
+    as: :doctor_patients
+
+ resources :prescriptions, only: [:create, :update, :destroy]
+  # ========================
+  # API ROUTES
+  # ========================
+  namespace :api do
+    namespace :v1 do
+
+      # AUTH
+      post "login", to: "auth#login"
+      post "hospital/signup", to: "hospital_auth#signup"
+      post "doctor/signup", to: "doctor_auth#signup"
+      post "patient/signup", to: "patient_auth#signup"
+
+      # HOSPITAL CONTEXT
+      resources :hospitals do
+        resources :doctors
+        resources :patients
+        resources :appointments
+      end
+
+      # DOCTOR CONTEXT
+      get "doctor/patients", to: "patients#my_patients"
+      get "doctor/appointments", to: "appointments#doctor_appointments"
+      get "doctor/prescriptions", to: "prescriptions#doctor_prescriptions"
+
+      # PATIENT CONTEXT
+      get "patient/doctor", to: "patients#my_doctor"
+      get "patient/appointments", to: "appointments#patient_appointments"
+      get "patient/prescriptions", to: "prescriptions#patient_prescriptions"
+
+    end
+  end
 end
-
-

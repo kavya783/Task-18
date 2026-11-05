@@ -19,13 +19,23 @@ class PrescriptionsController < ApplicationController
   end
 
   def update
+    if @prescription.update(prescription_params)
+      redirect_to doctor_dashboard_path(current_doctor,
+        mode: "prescription_table"),
+        notice: "Prescription updated successfully."
+    else
+      redirect_to doctor_dashboard_path(current_doctor,
+        mode: "prescription_table"),
+        alert: @prescription.errors.full_messages.to_sentence
+    end
   end
 
   def destroy
     @prescription.destroy
 
     redirect_to doctor_dashboard_path(current_doctor,
-      mode: "prescription_table")
+      mode: "prescription_table"),
+      notice: "Prescription deleted successfully."
   end
 
   private
@@ -35,7 +45,6 @@ class PrescriptionsController < ApplicationController
   end
 
   def prescription_params
-    params.require(:prescription)
-          .permit(:prescription, :patient_id)
+    params.require(:prescription).permit(:prescription, :patient_id)
   end
 end

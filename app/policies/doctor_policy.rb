@@ -1,17 +1,34 @@
 class DoctorPolicy < ApplicationPolicy
 
-
-
   def show?
-    true
+    return false unless user.present?
+
+    if user.is_a?(Hospital)
+      record.hospital_id == user.id
+    elsif user.is_a?(Doctor)
+      record.id == user.id
+    elsif user.is_a?(User)
+      user.admin? || record.hospital&.user_id == user.id
+    else
+      false
+    end
   end
 
   def create?
-    user.admin? || user.hospital_owner?
+    user.is_a?(Hospital) ||
+      (user.is_a?(User) && (user.admin? || user.hospital_owner?))
   end
 
   def update?
-    user.admin? || record.hospital.user_id == user.id
+    return false unless user.present?
+
+    if user.is_a?(Hospital)
+      record.hospital_id == user.id
+    elsif user.is_a?(User)
+      user.admin? || record.hospital&.user_id == user.id
+    else
+      false
+    end
   end
 
   def edit?
@@ -19,28 +36,25 @@ class DoctorPolicy < ApplicationPolicy
   end
 
   def destroy?
-    user.admin?
+    update?
   end
-
-
 
   class Scope < Scope
     def resolve
-      if user.admin?
-        scope.all
-
-      elsif user.hospital_owner?
-        # hospital owner can see doctors in their hospital
-        scope.joins(:hospital).where(hospitals: { user_id: user.id })
-
-      elsif user.doctor?
-        # doctor can only see himself
+      if user.is_a?(Hospital)
+        scope.where(hospital_id: user.id)
+      elsif user.is_a?(Doctor)
         scope.where(id: user.id)
-
+      elsif user.is_a?(User)
+        if user.admin?
+          scope.all
+        else
+          scope.joins(:hospital)
+               .where(hospitals: { user_id: user.id })
+        end
       else
         scope.none
       end
     end
   end
-
 end
