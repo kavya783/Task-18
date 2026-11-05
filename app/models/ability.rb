@@ -1,3 +1,4 @@
+
 class Ability
   include CanCan::Ability
 
@@ -10,8 +11,14 @@ class Ability
       can :manage, Patient
       can :manage, Appointment
 
+    elsif user.is_a?(Hospital)
+      can :manage, Doctor, hospital_id: user.id
+      can :manage, Patient, hospital_id: user.id
+      can :manage, Appointment, hospital_id: user.id
+      can :read, Hospital, id: user.id
+      can :update, Hospital, id: user.id
+
     elsif user.is_a?(Doctor)
-      
       can :read, Patient
       can :read, Appointment
       can :update, Appointment

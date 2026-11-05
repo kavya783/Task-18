@@ -3,7 +3,7 @@ class Patient < ApplicationRecord
   belongs_to :doctor, optional: true
   has_many :appointments, dependent: :destroy
   has_many :prescriptions, dependent: :destroy
-
+  has_secure_password
   has_secure_password validations: false
 
   validates :name, presence: true
