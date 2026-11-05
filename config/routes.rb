@@ -1,13 +1,25 @@
-Rails.application.routes.draw do
-  devise_for :admin_users, ActiveAdmin::Devise.config
 
+Rails.application.routes.draw do
+
+  # ========================
+  # ROOT ROUTE
+  # ========================
+  root to: redirect("/sign_in")
+
+  # ========================
+  # ACTIVE ADMIN
+  # ========================
+  devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
+
+  # ========================
+  # DEVISE USER AUTHENTICATION
+  # ========================
   devise_for :users
 
-   # ========================
-  # WEB ROUTES
   # ========================
-
+  # WEB AUTHENTICATION ROUTES
+  # ========================
   get "/sign_in", to: "sessions#new", as: :new_session
   post "/sign_in", to: "sessions#create"
   match "/sign_out", to: "sessions#destroy", via: [:get, :delete]
@@ -18,45 +30,57 @@ Rails.application.routes.draw do
 
   get "/patient_sign_in", to: "sessions#new"
   post "/patient_sign_in", to: "sessions#create"
-delete "/patient_sign_out",
-       to: "sessions#destroy_patient",
-       as: :patient_sign_out
-resources :hospitals do
-  resources :doctors
-  resources :patients
 
-  resources :appointments do
+  delete "/patient_sign_out",
+         to: "sessions#destroy_patient",
+         as: :patient_sign_out
+
+  # ========================
+  # HOSPITAL WEB ROUTES
+  # ========================
+  resources :hospitals do
+    resources :doctors
+    resources :patients
+
+    resources :appointments do
+      member do
+        patch :update_status
+      end
+    end
+
     member do
-      patch :update_status
+      delete :remove_image
+      patch :upload_image
     end
   end
 
-  member do
-    delete :remove_image
-    patch :upload_image
-  end
-end
+  # ========================
+  # DASHBOARD ROUTES
+  # ========================
+  get "patient_dashboard/:id",
+      to: "patients#dashboard",
+      as: :patient_dashboard
 
-get "patient_dashboard/:id",
-    to: "patients#dashboard",
-    as: :patient_dashboard
+  get "doctor_dashboard/:id",
+      to: "doctors#dashboard",
+      as: :doctor_dashboard
 
-get "doctor_dashboard/:id",
-    to: "doctors#dashboard",
-    as: :doctor_dashboard
+  get "doctor_patients",
+      to: "doctors#patients",
+      as: :doctor_patients
 
-get "doctor_patients",
-    to: "doctors#patients",
-    as: :doctor_patients
+  # ========================
+  # PRESCRIPTIONS
+  # ========================
+  resources :prescriptions, only: [:create, :update, :destroy]
 
- resources :prescriptions, only: [:create, :update, :destroy]
   # ========================
   # API ROUTES
   # ========================
   namespace :api do
     namespace :v1 do
 
-      # AUTH
+      # AUTHENTICATION
       post "login", to: "auth#login"
       post "hospital/signup", to: "hospital_auth#signup"
       post "doctor/signup", to: "doctor_auth#signup"
@@ -81,4 +105,5 @@ get "doctor_patients",
 
     end
   end
+
 end
