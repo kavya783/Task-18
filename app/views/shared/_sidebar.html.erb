@@ -1,4 +1,12 @@
-<% if hospital&.persisted? %>
+<%
+  hospital = current_hospital ||
+             @hospital ||
+             current_user&.hospitals&.first ||
+             current_doctor&.hospital ||
+             current_patient&.hospital
+%>
+
+<% if hospital.present? %>
 
   <!-- MOBILE SIDEBAR -->
   <div class="offcanvas offcanvas-start bg-secondary text-white"

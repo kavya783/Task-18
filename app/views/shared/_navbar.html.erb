@@ -1,61 +1,74 @@
-<nav class="navbar navbar-dark bg-dark px-3 py-2 shadow-sm">
 
+<nav class="navbar navbar-dark bg-dark px-3 py-2 shadow-sm">
   <div class="container-fluid d-flex align-items-center justify-content-between">
 
     <!-- LEFT: Brand + Hamburger -->
     <div class="d-flex align-items-center gap-2">
 
-      <!-- Mobile toggle -->
-     <button class="btn btn-outline-light btn-sm d-lg-none"
-        type="button"
-        data-bs-toggle="offcanvas"
-        data-bs-target="#mobileSidebar">
- <i class="bi bi-list"></i>
-</button>
+      <button class="btn btn-outline-light btn-sm d-lg-none"
+              type="button"
+              data-bs-toggle="offcanvas"
+              data-bs-target="#mobileSidebar">
+        <i class="bi bi-list"></i>
+      </button>
 
       <!-- Brand -->
-    <a class="navbar-brand fw-semibold m-0">
-  <% if user_signed_in? %>
-    <%= current_user.hospitals.first&.name %>
+      <a class="navbar-brand fw-semibold m-0">
+        <% if hospital_signed_in? %>
+          <%= current_hospital.name %>
 
-  <% elsif doctor_signed_in? %>
-    <%= current_doctor.hospital.name %>
+        <% elsif user_signed_in? %>
+          <%= current_user.hospitals.first&.name %>
 
-  <% elsif patient_signed_in? %>
-    <%= current_patient.hospital.name %>
+        <% elsif doctor_signed_in? %>
+          <%= current_doctor.hospital&.name %>
 
-  <% else %>
-    Hospital Management
-  <% end %>
-</a>
+        <% elsif patient_signed_in? %>
+          <%= current_patient.hospital&.name %>
+
+        <% else %>
+          Hospital Management
+        <% end %>
+      </a>
     </div>
 
     <!-- RIGHT: User + Logout -->
-    <% if user_signed_in? || doctor_signed_in? || patient_signed_in? %>
+    <% if hospital_signed_in? || user_signed_in? || doctor_signed_in? || patient_signed_in? %>
 
       <div class="d-flex align-items-center gap-2">
 
         <!-- User info -->
-<span class="text-white">
-  <% if user_signed_in? %>
-    <%= current_user.hospitals.first&.email %>
-  <% elsif doctor_signed_in? %>
-    <%= current_doctor.email %>
-  <% elsif patient_signed_in? %>
-    <%= current_patient.email %>
-  <% end %>
-</span>
+        <span class="text-white">
+          <% if hospital_signed_in? %>
+            <%= current_hospital.email %>
+
+          <% elsif user_signed_in? %>
+            <%= current_user.email %>
+
+          <% elsif doctor_signed_in? %>
+            <%= current_doctor.email %>
+
+          <% elsif patient_signed_in? %>
+            <%= current_patient.email %>
+          <% end %>
+        </span>
 
         <!-- Logout -->
-        <% if doctor_signed_in? %>
+        <% if hospital_signed_in? %>
           <%= button_to "Logout",
-              destroy_doctor_session_path,
+              sign_out_path,
+              method: :delete,
+              class: "btn btn-danger btn-sm" %>
+
+        <% elsif doctor_signed_in? %>
+          <%= button_to "Logout",
+              doctor_sign_out_path,
               method: :delete,
               class: "btn btn-danger btn-sm" %>
 
         <% elsif patient_signed_in? %>
           <%= button_to "Logout",
-              destroy_patient_session_path,
+              patient_sign_out_path,
               method: :delete,
               class: "btn btn-danger btn-sm" %>
 
