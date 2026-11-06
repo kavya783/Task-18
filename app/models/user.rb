@@ -20,11 +20,12 @@ class User < ApplicationRecord
   end
 
   def create_default_hospital
-    hospitals.create!(
-      name: hospital_name,
-      email: email,
-      phone: phone,
-      city: city
-    )
-  end
+  hospitals.create!(
+    name: hospital_name,
+    email: email,
+    phone: phone,
+    city: city,
+    password: password
+  )
+end
 end
