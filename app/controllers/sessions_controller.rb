@@ -1,3 +1,4 @@
+
 class SessionsController < ApplicationController
 
   def new
@@ -8,45 +9,50 @@ class SessionsController < ApplicationController
     email = params[:email]
     password = params[:password]
 
+    # First check User (Devise)
+    user = User.find_by(email: email)
+
+    if user&.valid_password?(password)
+      sign_in(user)
+
+      hospital = user.hospitals.first
+
+      if hospital.present?
+        redirect_to hospital_path(hospital, mode: "hospital_details")
+      else
+        redirect_to new_session_path
+      end
+      return
+    end
+
+    # Check Hospital
     hospital = Hospital.find_by(email: email)
 
     if hospital&.authenticate(password)
       session[:hospital_id] = hospital.id
       redirect_to hospital_path(hospital)
-
-    elsif (doctor = Doctor.find_by(email: email))
-      if doctor.authenticate(password)
-        session[:doctor_id] = doctor.id
-        redirect_to doctor_dashboard_path(doctor)
-      else
-        invalid_login
-      end
-
-    elsif (patient = Patient.find_by(email: email))
-      if patient.authenticate(password)
-        session[:patient_id] = patient.id
-        redirect_to patient_dashboard_path(patient)
-      else
-        invalid_login
-      end
-
-    elsif (user = User.find_by(email: email))
-      if user.valid_password?(password)
-        sign_in(user)
-        hospital = user.hospitals.first
-
-        if hospital.present?
-          redirect_to hospital_path(hospital, mode: "hospital_details")
-        else
-          redirect_to new_session_path
-        end
-      else
-        invalid_login
-      end
-
-    else
-      invalid_login
+      return
     end
+
+    # Check Doctor
+    doctor = Doctor.find_by(email: email)
+
+    if doctor&.authenticate(password)
+      session[:doctor_id] = doctor.id
+      redirect_to doctor_dashboard_path(doctor)
+      return
+    end
+
+    # Check Patient
+    patient = Patient.find_by(email: email)
+
+    if patient&.authenticate(password)
+      session[:patient_id] = patient.id
+      redirect_to patient_dashboard_path(patient)
+      return
+    end
+
+    invalid_login
   end
 
   def destroy
