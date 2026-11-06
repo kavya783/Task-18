@@ -3,9 +3,7 @@ class RegistrationsController < Devise::RegistrationsController
   def create
     build_resource(sign_up_params)
 
-    resource.save
-
-    if resource.persisted?
+    if resource.save
       if resource.active_for_authentication?
         set_flash_message! :notice, :signed_up
         sign_in(resource)
@@ -15,13 +13,13 @@ class RegistrationsController < Devise::RegistrationsController
         expire_data_after_sign_in!
         redirect_to new_session_path
       end
-  else
-  Rails.logger.error "SIGNUP ERRORS: #{resource.errors.full_messages}"
+    else
+      Rails.logger.error "SIGNUP ERRORS: #{resource.errors.full_messages.inspect}"
 
-  clean_up_passwords resource
-  set_minimum_password_length
-  render :new, status: :unprocessable_entity
-end
+      clean_up_passwords resource
+      set_minimum_password_length
+      render :new, status: :unprocessable_entity
+    end
   end
 
 end
