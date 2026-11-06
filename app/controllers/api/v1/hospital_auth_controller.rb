@@ -1,6 +1,7 @@
-class Api::V1::HospitalAuthController < ApplicationController
-skip_before_action :authenticate_request, only: [:signup]
-def signup
+class Api::V1::HospitalAuthController < Api::BaseController
+  skip_before_action :authenticate_request, only: [:signup]
+
+  def signup
     hospital = Hospital.new(hospital_params)
 
     if hospital.save
@@ -9,15 +10,22 @@ def signup
         role: "Hospital"
       })
 
-      render json: { hospital: hospital, token: token }, status: :created
+      render json: {
+        hospital: hospital.as_json(except: [:password_digest, :api_token]),
+        token: token
+      }, status: :created
     else
-      render json: { errors: hospital.errors.full_messages }, status: :unprocessable_entity
+      render json: {
+        errors: hospital.errors.full_messages
+      }, status: :unprocessable_entity
     end
   end
 
   private
 
   def hospital_params
-    params.require(:hospital).permit(:name, :email, :phone, :city, :password)
+    params.require(:hospital).permit(
+      :name, :email, :phone, :city, :password
+    )
   end
 end
