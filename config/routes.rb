@@ -5,8 +5,8 @@ Rails.application.routes.draw do
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
   # DEVISE USER AUTHENTICATION
-  devise_for :users, controllers: {
-  registrations: "devise/registrations"
+ devise_for :users, controllers: {
+  registrations: "registrations"
 }
   # WEB AUTHENTICATION ROUTES
   get "/sign_in", to: "sessions#new", as: :new_session
