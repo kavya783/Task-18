@@ -15,11 +15,13 @@ class RegistrationsController < Devise::RegistrationsController
         expire_data_after_sign_in!
         redirect_to new_session_path
       end
-    else
-      clean_up_passwords resource
-      set_minimum_password_length
-      render :new, status: :unprocessable_entity
-    end
+  else
+  Rails.logger.error "SIGNUP ERRORS: #{resource.errors.full_messages}"
+
+  clean_up_passwords resource
+  set_minimum_password_length
+  render :new, status: :unprocessable_entity
+end
   end
 
 end
