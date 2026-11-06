@@ -1,7 +1,6 @@
 class Api::V1::HospitalAuthController < ApplicationController
-  skip_before_action :authenticate_user, only: [:signup]
-
-  def signup
+skip_before_action :authenticate_request, only: [:signup]
+def signup
     hospital = Hospital.new(hospital_params)
 
     if hospital.save

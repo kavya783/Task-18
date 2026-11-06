@@ -1,5 +1,6 @@
+
 class Api::V1::AuthController < Api::BaseController
-  skip_before_action :authenticate_user, only: [:login]
+  skip_before_action :authenticate_request, only: [:login]
 
   def login
     user =
@@ -8,7 +9,6 @@ class Api::V1::AuthController < Api::BaseController
       Patient.find_by(email: params[:email])
 
     if user&.authenticate(params[:password])
-
       token = JsonWebToken.encode({
         user_id: user.id,
         role: user.class.name

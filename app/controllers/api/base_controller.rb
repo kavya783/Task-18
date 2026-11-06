@@ -5,8 +5,11 @@ class Api::BaseController < ActionController::API
 
   def authenticate_request
     header = request.headers["Authorization"]
+    token = header&.split(" ")&.last
 
-    token = header.split(" ").last if header
+    if token.blank?
+      return render json: { error: "Unauthorized" }, status: :unauthorized
+    end
 
     begin
       decoded_token = JWT.decode(
