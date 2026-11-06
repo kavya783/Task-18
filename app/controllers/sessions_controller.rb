@@ -10,7 +10,11 @@ class SessionsController < ApplicationController
     password = params[:password]
 
     # First check User (Devise)
-    user = User.find_by(email: email)
+   user = User.find_by(email: email)
+
+Rails.logger.info "USER FOUND: #{user.present?}"
+Rails.logger.info "USER PASSWORD VALID: #{user&.valid_password?(password)}"
+Rails.logger.info "HOSPITAL FOUND: #{user&.hospitals&.exists?}"
 
     if user&.valid_password?(password)
       sign_in(user)
