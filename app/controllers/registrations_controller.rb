@@ -1,25 +1,28 @@
 class RegistrationsController < Devise::RegistrationsController
 
-  def create
-    build_resource(sign_up_params)
+ def create
+  build_resource(sign_up_params)
 
-    if resource.save
-      if resource.active_for_authentication?
-        set_flash_message! :notice, :signed_up
-        sign_in(resource)
-        redirect_to new_session_path
-      else
-        set_flash_message! :notice, :"signed_up_but_#{resource.inactive_message}"
-        expire_data_after_sign_in!
-        redirect_to new_session_path
-      end
-    else
-      Rails.logger.error "SIGNUP ERRORS: #{resource.errors.full_messages.inspect}"
+  begin
+    resource.save!
 
-      clean_up_passwords resource
-      set_minimum_password_length
-      render :new, status: :unprocessable_entity
-    end
+    Rails.logger.info "USER CREATED: #{resource.id}"
+
+    sign_in(resource)
+    redirect_to new_session_path
+
+  rescue ActiveRecord::RecordInvalid => e
+    Rails.logger.error "RECORD INVALID: #{e.message}"
+    Rails.logger.error "ERRORS: #{e.record.errors.full_messages.inspect}"
+
+    clean_up_passwords resource
+    set_minimum_password_length
+    render :new, status: :unprocessable_entity
+
+  rescue StandardError => e
+    Rails.logger.error "SIGNUP EXCEPTION: #{e.class} - #{e.message}"
+    raise
   end
+end
 
 end
