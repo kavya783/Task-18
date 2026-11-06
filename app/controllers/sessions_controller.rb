@@ -30,6 +30,20 @@ class SessionsController < ApplicationController
         invalid_login
       end
 
+    elsif (user = User.find_by(email: email))
+      if user.valid_password?(password)
+        sign_in(user)
+        hospital = user.hospitals.first
+
+        if hospital.present?
+          redirect_to hospital_path(hospital, mode: "hospital_details")
+        else
+          redirect_to new_session_path
+        end
+      else
+        invalid_login
+      end
+
     else
       invalid_login
     end
