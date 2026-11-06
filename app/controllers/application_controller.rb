@@ -1,4 +1,3 @@
-
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :null_session
   before_action :configure_permitted_parameters, if: :devise_controller?
@@ -47,10 +46,13 @@ class ApplicationController < ActionController::Base
       new_session_path
     end
   end
-  # Redirect after User signup
   def after_sign_up_path_for(resource)
-    new_session_path
-  end
+  new_session_path
+end
+
+def after_inactive_sign_up_path_for(resource)
+  new_session_path
+end
   # Hospital login
   def current_hospital
     @current_hospital ||= Hospital.find_by(id: session[:hospital_id]) if session[:hospital_id]
